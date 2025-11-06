@@ -39,6 +39,10 @@ try:
 except Exception:
     OpenAI = None  # type: ignore
 
+from keep_alive import keep_alive
+keep_alive()
+
+
 # ---------------------------
 # Config & Logging
 # ---------------------------
@@ -382,5 +386,6 @@ if __name__ == "__main__":
     if not DISCORD_TOKEN:
         raise SystemExit("Missing DISCORD_TOKEN in environment.")
     bot.run(DISCORD_TOKEN)
+
 
 
