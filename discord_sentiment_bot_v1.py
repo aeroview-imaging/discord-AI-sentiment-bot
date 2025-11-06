@@ -332,7 +332,12 @@ def build_embed(
 @tree.command(name="sentiment", description="Get AI sentiment, options skew, and ATR-based levels for a ticker")
 @app_commands.describe(ticker="e.g., AAPL")
 async def sentiment_slash(interaction: discord.Interaction, ticker: str):
-    await interaction.response.defer(thinking=True, ephemeral=False)
+    # Immediately acknowledge to avoid "Unknown interaction" 404 errors
+    try:
+        await interaction.response.defer(thinking=True, ephemeral=False)
+    except discord.InteractionResponded:
+        pass
+
     t0 = time.time()
     t = ticker.strip().upper()
     try:
@@ -377,4 +382,5 @@ if __name__ == "__main__":
     if not DISCORD_TOKEN:
         raise SystemExit("Missing DISCORD_TOKEN in environment.")
     bot.run(DISCORD_TOKEN)
+
 
