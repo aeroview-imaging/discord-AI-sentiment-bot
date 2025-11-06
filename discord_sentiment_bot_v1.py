@@ -364,14 +364,17 @@ async def sentiment_slash(interaction: discord.Interaction, ticker: str):
 # Ready & Sync
 # ---------------------------
 @bot.event
+@bot.event
 async def on_ready():
-    try:
-        synced = await tree.sync()
-        logger.info(f"Synced {len(synced)} command(s). Logged in as {bot.user}.")
-    except Exception as e:
-        logger.error(f"Command sync failed: {e}")
+    if not hasattr(bot, "synced"):
+        await tree.sync()
+        bot.synced = True
+        logger.info(f"Commands synced once. Logged in as {bot.user}.")
+    else:
+        logger.info(f"Bot reconnected as {bot.user}. No re-sync.")
 
 if __name__ == "__main__":
     if not DISCORD_TOKEN:
         raise SystemExit("Missing DISCORD_TOKEN in environment.")
     bot.run(DISCORD_TOKEN)
+
